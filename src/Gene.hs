@@ -8,18 +8,31 @@ data NodeType = Sensor | Hidden | Output
 data Node = Node {nInnovation :: Innovation, 
                   nType :: NodeType,
                   nConnections :: [Innovation]}
-                  deriving (Show)
 
 data Connection = Connection {cInnovation :: Innovation,
                               cIn :: Innovation,
                               cOut :: Innovation,
                               cWeight :: Double,
                               cEnabled :: Bool}
-                              deriving (Show)
 
 instance Eq Node where
   a == b = nInnovation a == nInnovation b
 
+instance Show Node where
+  show (Node i t cs) = showInnovation ++ showType ++ showConnections
+    where
+      showInnovation = "Innovation : " ++ show i ++ " | "
+      showType = "Type : " ++ show t ++ " | "
+      showConnections = "Connections : " ++ show cs
+
+instance Show Connection where
+  show (Connection i inNode outNode weight enabled) = 
+    showInnovation ++ showIn ++ showOut ++ showWeight
+    where
+      showInnovation = "Innovation : " ++ show i ++ " | "
+      showIn         = "In : " ++ show inNode ++ " | "
+      showOut = "Out : " ++ show outNode ++ " | "
+      showWeight     = "Weight : " ++ show weight
 
 connectionFromTo :: Innovation -> Innovation -> Innovation -> Connection
 connectionFromTo f t i = Connection {cInnovation = i,
@@ -29,3 +42,5 @@ connectionFromTo f t i = Connection {cInnovation = i,
                                      cEnabled = True} 
 disable :: Connection -> Connection
 disable c = c {cEnabled = False}
+
+
