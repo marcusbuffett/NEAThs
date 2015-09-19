@@ -2,6 +2,8 @@ module NEAT where
 
 import Genome
 import Gene
+import Types(Innovation)
+import Data.IORef
 import qualified Data.Map.Strict as M
 
 main = do
@@ -10,14 +12,25 @@ main = do
 
 addTwo = (+)
 
+innovation :: IO (IO Innovation)
+innovation = do
+  r <- newIORef 0
+  return (incrementAndReturn r)
+  where 
+  incrementAndReturn r = do
+    val <- readIORef r
+    modifyIORef r (+1)
+    return val
+
+
 exampleGenome :: Genome
 exampleGenome = Genome exampleNodes exampleConnections
 
-exampleNodes = M.fromList $ map (\n@(Node i _) -> (i, n)) [n1,n3]
+exampleNodes = M.fromList $ map (\n@(Node i _ []) -> (i, n)) [n1,n3]
 
-n1 = Node 1 Sensor
-n2 = Node 2 Hidden
-n3 = Node 3 Output
+n1 = Node 1 Sensor []
+n2 = Node 2 Hidden []
+n3 = Node 3 Output []
 
 exampleConnections = M.fromList $ map (\c@(Connection i _ _ _ _) -> (i, c)) [c1]
 

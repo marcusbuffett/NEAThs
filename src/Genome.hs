@@ -3,6 +3,7 @@ module Genome where
 import qualified Data.Map.Strict as M
 import Debug.Trace(trace)
 import Gene
+import Types(Innovation)
 
 data Genome = Genome {gNodes :: Nodes,
                       gConnections :: Connections}
@@ -36,4 +37,3 @@ addConnection c = M.insert (cInnovation c) c
 
 disableConnection :: Connection -> Connections -> Connections
 disableConnection c = M.adjust disable (cInnovation c)
-
